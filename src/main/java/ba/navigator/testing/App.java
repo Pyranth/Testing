@@ -6,6 +6,9 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 /**
  * Hello world!
@@ -83,8 +86,6 @@ public class App
     	WebElement category = driver.findElement(By.className("accommodation"));
         category.click();
         
-        // TODO: Check if locations are displayed, and if places are displayed in left pane.
-        
         try {
 			Thread.sleep(2000);
 		} catch (InterruptedException e) {
@@ -98,9 +99,14 @@ public class App
     
     private void ChoosePlaceFromList(WebDriver driver)
     {	
-    	// Ovde pronalazim div element koji sadrzi listu (ul) objekata. Ucita samo script elemente, ne vidi ul.
-    	// Pretpostavljam da je potrebno sacekati da se lista ucita, ali ne znam kako?
     	WebElement list = driver.findElement(By.xpath("//div[contains(@class, 'left-menu-pane')]/div/div[contains(@class, 'mCSB_container')]"));
+    	
+    	WebDriverWait wait = new WebDriverWait(driver, 0);
+    	wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//ul[contains(@class, 'menu_content_list')]")));
+    	
+    	List<WebElement> place = list.findElements(By.tagName("li"));
+    	
+    	place.get(0).findElement(By.tagName("a")).click();
     }
     
     private void CreateNewPlace(WebDriver driver)
@@ -114,10 +120,37 @@ public class App
     	WebElement buttonSelectCategory = driver.findElement(By.xpath("//div[contains(@class, 'category-selector-container')]/button"));
     	buttonSelectCategory.click();
     	
-    	// Ponovo isti problem sa ucitavanjem.
-    	WebElement categoryDropDownList = driver.findElement(By.xpath("//div[contains(@class, 'category-selector-row')]"));
+    	// Kad koristim WebDriverWait, ponekad radi, ponekad ne saceka da se div ucita i dobijem exception.
+    	/*
+    	WebDriverWait wait = new WebDriverWait(driver, 1000);
+    	wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[contains(@class, 'span3')]")));
+    	*/
+    	
+    	try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	
+    	WebElement categoryDropDownList = driver.findElement(By.xpath("//div[contains(@class, 'category-selector-row')]")).findElement(By.xpath(".//div[contains(@class, 'span3')]")).findElement(By.tagName("select"));
+    	
+    	Select select = new Select(categoryDropDownList);
+    	select.selectByValue("8");
+    	
+    	try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	
+    	WebElement subcategoryDropDownList = driver.findElement(By.xpath("//div[contains(@class, 'category-selector-row')]")).findElements(By.tagName("select")).get(1);
+    	Select select2 = new Select(subcategoryDropDownList);
+    	select2.selectByIndex(2);
     	
     	WebElement buttonSubmit = driver.findElement(By.xpath("//button[contains(@class, 'btn-success')]"));
+    	
     	// Element not visible exception???
     	buttonSubmit.click();
     }

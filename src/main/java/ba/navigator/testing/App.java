@@ -3,9 +3,11 @@ package ba.navigator.testing;
 import java.util.List;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -20,14 +22,10 @@ public class App
 	
 	public App() {
 		
-		InitializeTests();
 	}
 	
     public static void main( String[] args )
-    {
-        System.setProperty("webdriver.gecko.driver", "/home/atlantbh/geckodriver");
-        System.setProperty("webdriver.chrome.driver", "/home/atlantbh/chromedriver");
-        
+    {   
         new App();
     }
     
@@ -115,7 +113,7 @@ public class App
     	buttonCreate.click();
     	
     	WebElement nameField = driver.findElement(By.xpath("//input[@id='poi_name']"));
-    	nameField.sendKeys("Test name");
+    	//nameField.sendKeys("Test name");
     	
     	WebElement buttonSelectCategory = driver.findElement(By.xpath("//div[contains(@class, 'category-selector-container')]/button"));
     	buttonSelectCategory.click();
@@ -150,6 +148,10 @@ public class App
     	select2.selectByIndex(2);
     	
     	WebElement buttonSubmit = driver.findElement(By.xpath("//button[contains(@class, 'btn-success')]"));
+    	
+    	//
+    	((JavascriptExecutor)driver).executeScript("window.scrollBy(0,4000);"); 
+    	//
     	
     	// Element not visible exception???
     	buttonSubmit.click();

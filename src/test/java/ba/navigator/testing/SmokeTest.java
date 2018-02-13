@@ -25,7 +25,7 @@ public class SmokeTest {
 	private WebDriver chromeDriver;
 	
 	private WebDriver driver;
-	
+		
   @Test
   public void ChooseCategory()
   {
@@ -39,8 +39,8 @@ public class SmokeTest {
 			e.printStackTrace();
 		}
       
-      List<WebElement> places = driver.findElements(By.xpath("//li[contains(@class, 'place')]"));
-      List<WebElement> locations = driver.findElements(By.xpath("//div[contains(@class, 'map-marker-icon')]"));
+      List<WebElement> places = driver.findElements(By.xpath("//ul[contains(@class, 'menu_content_list')]/li"));
+      List<WebElement> locations = driver.findElements(By.xpath("//div[contains(@class, 'leaflet-marker-pane')]/div"));
       
       assertTrue(!places.isEmpty());
       assertTrue(!locations.isEmpty());
@@ -61,7 +61,7 @@ public class SmokeTest {
   	place.get(0).findElement(By.tagName("a")).click();
   	
   	try {
-		Thread.sleep(1000);
+		Thread.sleep(2000);
 	} catch (InterruptedException e) {
 		// TODO Auto-generated catch block
 		e.printStackTrace();
@@ -80,11 +80,11 @@ public class SmokeTest {
   @Test
   public void CreateNewPlace()
   {
-  	WebElement buttonCreate = driver.findElement(By.xpath("//li[@title='Kreiraj objekat' or @title='Create place']/a"));
+  	WebElement buttonCreate = driver.findElements(By.xpath("//ul[contains(@class, 'navigation')]/li/a")).get(0);
   	buttonCreate.click();
   	
   	WebElement nameField = driver.findElement(By.xpath("//input[@id='poi_name']"));
-  	//nameField.sendKeys("Test name");
+  	nameField.sendKeys("Test name");
   	
   	WebElement buttonSelectCategory = driver.findElement(By.xpath("//div[contains(@class, 'category-selector-container')]/button"));
   	buttonSelectCategory.click();
@@ -96,7 +96,7 @@ public class SmokeTest {
   	*/
   	
   	try {
-			Thread.sleep(1000);
+			Thread.sleep(2000);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -104,44 +104,58 @@ public class SmokeTest {
   	
   	WebElement categoryDropDownList = chromeDriver.findElement(By.xpath("//div[contains(@class, 'category-selector-row')]")).findElement(By.xpath(".//div[contains(@class, 'span3')]")).findElement(By.tagName("select"));
   	
+  	assertTrue(categoryDropDownList.isDisplayed());
+  	
   	Select select = new Select(categoryDropDownList);
   	select.selectByValue("8");
   	
   	try {
-			Thread.sleep(1000);
+			Thread.sleep(2000);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
   	
   	WebElement subcategoryDropDownList = driver.findElement(By.xpath("//div[contains(@class, 'category-selector-row')]")).findElements(By.tagName("select")).get(1);
+  	
+  	assertTrue(subcategoryDropDownList.isDisplayed());
+  	
   	Select select2 = new Select(subcategoryDropDownList);
   	select2.selectByIndex(2);
   	
   	WebElement buttonSubmit = driver.findElement(By.xpath("//button[contains(@class, 'btn-success')]"));
   	
-  	//
-  	((JavascriptExecutor)driver).executeScript("window.scrollBy(0,4000);"); 
-  	//
-  	
   	// Element not visible exception???
-  	buttonSubmit.click();
+  	// buttonSubmit.click();
+  	
+  	// WebElement title = driver.findElement(By.xpath("//div[contains(@class, 'name')]"));
+  	// assertTrue(title.getAttribute("title") == "Test name");
   }
   
   @Test
   public void Suggestion()
   {
-  	WebElement buttonCreate = driver.findElement(By.xpath("//li[@title='Predloži ideju - Pošalji komentar' or @title='Suggest features - Report a problem']/a"));
+  	WebElement buttonCreate = driver.findElements(By.xpath("//ul[contains(@class, 'navigation')]/li/a")).get(1);
   	buttonCreate.click();
   	
-  	WebElement commentTextArea = driver.findElement(By.xpath("//textarea[@title='Komentar']"));
+  	WebElement commentTextArea = driver.findElement(By.xpath("//textarea[@name='comment']"));
   	commentTextArea.sendKeys("Komentar");
   	
-  	WebElement radioButton = driver.findElement(By.xpath("//input[@type='radio' and @value='Kritika']"));
+  	WebElement radioButton = driver.findElements(By.xpath("//input[@type='radio']")).get(1);
   	radioButton.click();
   	
-  	WebElement sendButton = driver.findElement(By.xpath("//input[@type='submit' and @value='Pošalji']"));
+  	WebElement sendButton = driver.findElement(By.xpath("//input[@type='submit']"));
   	sendButton.click();
+  	
+  	try {
+		Thread.sleep(1000);
+	} catch (InterruptedException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+  	
+  	WebElement succesMessage = driver.findElement(By.xpath("//div[contains(@class, 'alert-success')]"));
+  	assertTrue(succesMessage.isDisplayed());
   }
   
   @Test
@@ -171,6 +185,13 @@ public class SmokeTest {
   	mapViewButton.click();
   	
   	try {
+		Thread.sleep(1000);
+	} catch (InterruptedException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+  	
+  	try {
 			Thread.sleep(1000);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
@@ -178,20 +199,18 @@ public class SmokeTest {
 		}
   	
   	mapViewButton.click();
+  	
+  	try {
+		Thread.sleep(1000);
+	} catch (InterruptedException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
   }
   
   @BeforeTest
   public void beforeTest() {
 	  //TODO: Logic to change browser
-	  
-	  System.setProperty("webdriver.gecko.driver", "/home/atlantbh/geckodriver");
-      System.setProperty("webdriver.chrome.driver", "/home/atlantbh/chromedriver");
-	  
-	  chromeDriver = new ChromeDriver();
-	  
-	  driver = chromeDriver;
-	  
-	  driver.get("http://www.navigator.ba");
   }
 
   @AfterTest
@@ -200,7 +219,14 @@ public class SmokeTest {
 
   @BeforeSuite
   public void beforeSuite() {
-
+	  System.setProperty("webdriver.gecko.driver", "/home/atlantbh/geckodriver");
+      System.setProperty("webdriver.chrome.driver", "/home/atlantbh/chromedriver");
+	  
+	  chromeDriver = new ChromeDriver();
+	  
+	  driver = chromeDriver;
+	  
+	  driver.get("http://www.navigator.ba");
   }
 
   @AfterSuite

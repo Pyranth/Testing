@@ -39,8 +39,8 @@ public class SmokeTest {
 			e.printStackTrace();
 		}
       
-      List<WebElement> places = driver.findElements(By.xpath("//div[contains(@class, 'map-marker-icon')]"));
-      List<WebElement> locations = driver.findElements(By.xpath("//div[contains(@class, 'highlighted-map-marker-icon')]"));
+      List<WebElement> places = driver.findElements(By.xpath("//li[contains(@class, 'place')]"));
+      List<WebElement> locations = driver.findElements(By.xpath("//div[contains(@class, 'map-marker-icon')]"));
       
       assertTrue(!places.isEmpty());
       assertTrue(!locations.isEmpty());
@@ -59,6 +59,22 @@ public class SmokeTest {
   	assertNotEquals(place.size(), 0);
   	
   	place.get(0).findElement(By.tagName("a")).click();
+  	
+  	try {
+		Thread.sleep(1000);
+	} catch (InterruptedException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+  	
+  	WebElement image = driver.findElement(By.xpath("//img[contains(@class, 'profile-image')]"));
+  	assertTrue(image.isDisplayed());
+  	
+  	WebElement address = driver.findElement(By.xpath("//div[contains(@class, 'address')]"));
+  	assertTrue(address.isDisplayed());
+  	
+  	WebElement description = driver.findElement(By.xpath("//div[contains(@class, 'description')]"));
+  	assertTrue(description.isDisplayed());
   }
   
   @Test

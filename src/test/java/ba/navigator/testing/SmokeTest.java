@@ -9,6 +9,7 @@ import static org.testng.Assert.assertNotEquals;
 import static org.testng.Assert.assertTrue;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
@@ -25,6 +26,8 @@ public class SmokeTest {
 	private WebDriver chromeDriver;
 	
 	private WebDriver driver;
+	
+	private WebDriverWait wait;
 		
   @Test
   public void ChooseCategory()
@@ -32,13 +35,8 @@ public class SmokeTest {
   	  WebElement category = driver.findElement(By.className("accommodation"));
       category.click();
       
-      try {
-			Thread.sleep(2000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-      
+      wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//ul[contains(@class, 'menu_content_list')]/li")));
+    	
       List<WebElement> places = driver.findElements(By.xpath("//ul[contains(@class, 'menu_content_list')]/li"));
       List<WebElement> locations = driver.findElements(By.xpath("//div[contains(@class, 'leaflet-marker-pane')]/div"));
       
@@ -60,14 +58,9 @@ public class SmokeTest {
   	
   	place.get(0).findElement(By.tagName("a")).click();
   	
-  	try {
-		Thread.sleep(2000);
-	} catch (InterruptedException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	}
+  	wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[contains(@class, 'profile-image-container')]")));
   	
-  	WebElement image = driver.findElement(By.xpath("//img[contains(@class, 'profile-image')]"));
+  	WebElement image = driver.findElement(By.xpath("//div[contains(@class, 'profile-image-container')]"));
   	assertTrue(image.isDisplayed());
   	
   	WebElement address = driver.findElement(By.xpath("//div[contains(@class, 'address')]"));
@@ -89,32 +82,15 @@ public class SmokeTest {
   	WebElement buttonSelectCategory = driver.findElement(By.xpath("//div[contains(@class, 'category-selector-container')]/button"));
   	buttonSelectCategory.click();
   	
-  	// Kad koristim WebDriverWait, ponekad radi, ponekad ne saceka da se div ucita i dobijem exception.
-  	/*
-  	WebDriverWait wait = new WebDriverWait(driver, 1000);
-  	wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[contains(@class, 'span3')]")));
-  	*/
-  	
-  	try {
-			Thread.sleep(2000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+  	wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[contains(@class, 'category-selector-row')]/div[contains(@class, 'span3')]/select")));
   	
   	WebElement categoryDropDownList = chromeDriver.findElement(By.xpath("//div[contains(@class, 'category-selector-row')]")).findElement(By.xpath(".//div[contains(@class, 'span3')]")).findElement(By.tagName("select"));
-  	
   	assertTrue(categoryDropDownList.isDisplayed());
   	
   	Select select = new Select(categoryDropDownList);
   	select.selectByValue("8");
   	
-  	try {
-			Thread.sleep(2000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+  	wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[contains(@class, 'category-selector-row')]/div[position() = 3]/select")));
   	
   	WebElement subcategoryDropDownList = driver.findElement(By.xpath("//div[contains(@class, 'category-selector-row')]")).findElements(By.tagName("select")).get(1);
   	
@@ -127,9 +103,6 @@ public class SmokeTest {
   	
   	// Element not visible exception???
   	// buttonSubmit.click();
-  	
-  	// WebElement title = driver.findElement(By.xpath("//div[contains(@class, 'name')]"));
-  	// assertTrue(title.getAttribute("title") == "Test name");
   }
   
   @Test
@@ -147,12 +120,7 @@ public class SmokeTest {
   	WebElement sendButton = driver.findElement(By.xpath("//input[@type='submit']"));
   	sendButton.click();
   	
-  	try {
-		Thread.sleep(1000);
-	} catch (InterruptedException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	}
+  	wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[contains(@class, 'alert-success')]")));
   	
   	WebElement succesMessage = driver.findElement(By.xpath("//div[contains(@class, 'alert-success')]"));
   	assertTrue(succesMessage.isDisplayed());
@@ -165,21 +133,19 @@ public class SmokeTest {
   	zoomInButton.click();
   	
   	try {
-			Thread.sleep(1000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		Thread.sleep(1000);
+	} catch (InterruptedException e) {
+		e.printStackTrace();
+	}
   	
   	WebElement zoomOutButton = driver.findElement(By.xpath("//a[@title='Zoom out']"));
   	zoomOutButton.click();
   	
   	try {
-			Thread.sleep(1000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		Thread.sleep(1000);
+	} catch (InterruptedException e) {
+		e.printStackTrace();
+	}
   	
   	WebElement mapViewButton = driver.findElement(By.xpath("//a[contains(@class, 'leaflet-control-layers-switch')]"));
   	mapViewButton.click();
@@ -187,23 +153,14 @@ public class SmokeTest {
   	try {
 		Thread.sleep(1000);
 	} catch (InterruptedException e) {
-		// TODO Auto-generated catch block
 		e.printStackTrace();
 	}
-  	
-  	try {
-			Thread.sleep(1000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
   	
   	mapViewButton.click();
   	
   	try {
 		Thread.sleep(1000);
 	} catch (InterruptedException e) {
-		// TODO Auto-generated catch block
 		e.printStackTrace();
 	}
   }
@@ -225,6 +182,9 @@ public class SmokeTest {
 	  chromeDriver = new ChromeDriver();
 	  
 	  driver = chromeDriver;
+	  driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+	  
+	  wait = new WebDriverWait(driver, 10);
 	  
 	  driver.get("http://www.navigator.ba");
   }

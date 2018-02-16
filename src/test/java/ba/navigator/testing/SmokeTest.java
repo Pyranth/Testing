@@ -58,9 +58,11 @@ public class SmokeTest {
   {
 	  createPage = new NavigatorCreatePlacePage(driver);
 	  
-	  createPage.createNewPlace();
+	  createPage.insertPlaceData();
 	  assertTrue(createPage.getCategory().isDisplayed());
 	  assertTrue(createPage.getSubcategory().isDisplayed());
+	  
+	  createPage.submitNewPlace();
   }
   
   @Test

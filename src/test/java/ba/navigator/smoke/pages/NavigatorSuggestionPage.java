@@ -1,4 +1,4 @@
-package ba.navigator.pages;
+package ba.navigator.smoke.pages;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;

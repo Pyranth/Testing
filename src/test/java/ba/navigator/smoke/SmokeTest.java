@@ -1,11 +1,11 @@
-package ba.navigator.testing;
+package ba.navigator.smoke;
 
 import org.testng.annotations.Test;
 
-import ba.navigator.pages.NavigatorCategoryPage;
-import ba.navigator.pages.NavigatorCreatePlacePage;
-import ba.navigator.pages.NavigatorHomePage;
-import ba.navigator.pages.NavigatorSuggestionPage;
+import ba.navigator.smoke.pages.NavigatorCategoryPage;
+import ba.navigator.smoke.pages.NavigatorCreatePlacePage;
+import ba.navigator.smoke.pages.NavigatorHomePage;
+import ba.navigator.smoke.pages.NavigatorSuggestionPage;
 
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.AfterTest;

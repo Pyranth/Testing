@@ -1,4 +1,4 @@
-package ba.navigator.pages;
+package ba.navigator.smoke.pages;
 
 import java.util.List;
 

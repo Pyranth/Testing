@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
-<suite name="SmokeSuite">
-  <test thread-count="5" name="SmokeTest">
+<suite name="SmokeSuite">	
+  <test thread-count="5" name="SmokeTestChrome">
+  <parameter name="browser" value="chrome"/>
     <classes>
-      <class name="ba.navigator.testing.SmokeTest">
+      <class name="ba.navigator.smoke.SmokeTest">
       	<methods>
 	      	<include name="ChooseCategory"></include>
 	      	<include name="ChoosePlaceFromList"></include>
@@ -13,5 +14,20 @@
       	</methods>
       </class>
     </classes>
-  </test> <!-- SmokeTest -->
+  </test> <!-- SmokeTestChrome -->
+  
+  <test thread-count="5" name="SmokeTestFirefox">
+  <parameter name="browser" value="firefox"/>
+    <classes>
+      <class name="ba.navigator.smoke.SmokeTest">
+      	<methods>
+	      	<include name="ChooseCategory"></include>
+	      	<include name="ChoosePlaceFromList"></include>
+	      	<include name="CreateNewPlace"></include>
+	      	<include name="Suggestion"></include>
+	      	<include name="MapTest"></include>
+      	</methods>
+      </class>
+    </classes>
+  </test> <!-- SmokeTestFirefox -->
 </suite> <!-- SmokeSuite -->

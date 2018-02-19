@@ -15,10 +15,10 @@ public class NavigatorHomePage {
 	private WebDriver driver;
 	private WebDriverWait wait;
 	
-	private By categoryName;
-	private By leftMenuPane = By.xpath("//ul[contains(@class, 'menu_content_list')]/li");
+	@FindBy(xpath = "//a[contains(@class, 'logo')]")
+	private WebElement homePageLink;
 	
-	@FindBy(xpath = "//ul[contains(@class, 'menu_content_list')]/li")
+	@FindBy(xpath = "//div[contains(@class, 'mCSB_container')]/ul[contains(@class, 'menu_content_list')]/li")
 	private List<WebElement> places;
 	
 	@FindBy(xpath = "//div[contains(@class, 'leaflet-marker-pane')]/div")
@@ -29,7 +29,6 @@ public class NavigatorHomePage {
 	
 	@FindBy(xpath = "//div[contains(@class, 'leaflet-control-layers')]/a")
 	private WebElement mapView;
-	
 
 	public NavigatorHomePage(WebDriver driver) {
 		this.driver = driver;
@@ -42,12 +41,10 @@ public class NavigatorHomePage {
 	
 	public void ChooseCategory(String categoryValue)
 	{
-		categoryName = By.className(categoryValue);
-		
-		WebElement category = driver.findElement(categoryName);
+		WebElement category = driver.findElement(By.className(categoryValue));
 	    category.click();
 	      
-	    wait.until(ExpectedConditions.visibilityOfElementLocated(leftMenuPane));
+	    wait.until(ExpectedConditions.visibilityOf(places.get(0)));
 	}
 	
 	public List<WebElement> getPlaces()
@@ -64,6 +61,14 @@ public class NavigatorHomePage {
 	
 	public void performMapTest()
 	{
+		homePageLink.click();
+		
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		
 		WebElement zoomInButton = zoomButtons.get(0);
 	  	zoomInButton.click();
 	  	

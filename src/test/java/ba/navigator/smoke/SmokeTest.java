@@ -8,7 +8,10 @@ import ba.navigator.smoke.pages.NavigatorHomePage;
 import ba.navigator.smoke.pages.NavigatorSuggestionPage;
 
 import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Parameters;
 import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.BeforeSuite;
 
 import static org.testng.Assert.assertNotEquals;
@@ -18,10 +21,13 @@ import java.util.concurrent.TimeUnit;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.testng.ITestContext;
 import org.testng.annotations.AfterSuite;
 
 public class SmokeTest {
 	private WebDriver chromeDriver;
+	private WebDriver firefoxDriver;
 	
 	private WebDriver driver;
 	
@@ -84,31 +90,44 @@ public class SmokeTest {
 	  homePage.performMapTest();
   }
   
-  @BeforeTest
-  public void beforeTest() {
-	  //TODO: Logic to change browser
+  @BeforeTest(alwaysRun = true)
+  @Parameters("browser")
+  public void beforeTest(String browser) {
+	  //TODO: Logic to change browser							
+	  if (browser.equals("chrome"))
+	  {
+		  if (driver != null)
+			  driver.close();
+			  
+		  driver = new ChromeDriver();
+	  }
+	  else
+	  {
+		  if (driver != null)
+			  driver.close();
+		  
+		  driver = new FirefoxDriver();
+	  }
+	  
+	  																																																																																																																																																																																																																																																																										driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+	  driver.get("http://www.navigator.ba");
   }
 
   @AfterTest
   public void afterTest() {
+	  
   }
 
   @BeforeSuite
   public void beforeSuite() {
 	  System.setProperty("webdriver.gecko.driver", "/home/atlantbh/geckodriver");
       System.setProperty("webdriver.chrome.driver", "/home/atlantbh/chromedriver");
-	  
-	  chromeDriver = new ChromeDriver();
-	  
-	  driver = chromeDriver;
-	  driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-	  
-	  driver.get("http://www.navigator.ba");
   }
 
   @AfterSuite
   public void afterSuite() {
-	  chromeDriver.close();
+	  if (driver != null)
+		  driver.close();
   }
 
 }

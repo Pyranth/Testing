@@ -58,11 +58,12 @@ public class SmokeTest {
   {
 	  createPage = new NavigatorCreatePlacePage(driver);
 	  
-	  createPage.insertPlaceData();
-	  assertTrue(createPage.getCategory().isDisplayed());
-	  assertTrue(createPage.getSubcategory().isDisplayed());
+	  createPage.insertPlaceData("Test name", 1, 2);
+	  assertTrue(createPage.getCategoryDropDownList().isDisplayed());
+	  assertTrue(createPage.getSubcategoryDropDownList().isDisplayed());
 	  
 	  createPage.submitNewPlace();
+	  // assertTrue for message displayed after place is successfuly created
   }
   
   @Test
@@ -70,7 +71,7 @@ public class SmokeTest {
   {
 	  suggestionPage = new NavigatorSuggestionPage(driver);
 	  
-	  suggestionPage.sendSuggestion();
+	  suggestionPage.sendSuggestion("Komentar");
 	  assertTrue(suggestionPage.getSuccessMessage().isDisplayed());
   }
   

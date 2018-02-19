@@ -5,6 +5,8 @@ import java.util.List;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -14,17 +16,26 @@ public class NavigatorHomePage {
 	private WebDriverWait wait;
 	
 	private By categoryName;
-	private By placeList = By.xpath("//ul[contains(@class, 'menu_content_list')]/li");
-	private By locationMarkers = By.xpath("//div[contains(@class, 'leaflet-marker-pane')]/div");
+	private By leftMenuPane = By.xpath("//ul[contains(@class, 'menu_content_list')]/li");
 	
-	private By zoomInLink = By.xpath("//a[@title='Zoom in']");
-	private By zoomOutLink = By.xpath("//a[@title='Zoom out']");
-	private By mapView = By.xpath("//a[contains(@class, 'leaflet-control-layers-switch')]");
+	@FindBy(xpath = "//ul[contains(@class, 'menu_content_list')]/li")
+	private List<WebElement> places;
+	
+	@FindBy(xpath = "//div[contains(@class, 'leaflet-marker-pane')]/div")
+	private List<WebElement> locations;
+	
+	@FindBy(xpath = "//div[contains(@class, 'leaflet-control-zoom')]/a")
+	private List<WebElement> zoomButtons;
+	
+	@FindBy(xpath = "//div[contains(@class, 'leaflet-control-layers')]/a")
+	private WebElement mapView;
+	
 
 	public NavigatorHomePage(WebDriver driver) {
 		this.driver = driver;
-		
 		wait = new WebDriverWait(driver, 10);
+		
+		PageFactory.initElements(driver, this);
 	}
 	
 	// Choose category Test scenario
@@ -36,20 +47,16 @@ public class NavigatorHomePage {
 		WebElement category = driver.findElement(categoryName);
 	    category.click();
 	      
-	    wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//ul[contains(@class, 'menu_content_list')]/li")));
+	    wait.until(ExpectedConditions.visibilityOfElementLocated(leftMenuPane));
 	}
 	
 	public List<WebElement> getPlaces()
-	{
-		List<WebElement> places = driver.findElements(placeList);
-		
+	{	
 		return places;
 	}
 	
 	public List<WebElement> getLocations()
 	{
-		List<WebElement> locations = driver.findElements(locationMarkers);
-	    
 		return locations;
 	}
 	
@@ -57,7 +64,7 @@ public class NavigatorHomePage {
 	
 	public void performMapTest()
 	{
-		WebElement zoomInButton = driver.findElement(zoomInLink);
+		WebElement zoomInButton = zoomButtons.get(0);
 	  	zoomInButton.click();
 	  	
 	  	try {
@@ -66,7 +73,7 @@ public class NavigatorHomePage {
 			e.printStackTrace();
 		}
 	  	
-	  	WebElement zoomOutButton = driver.findElement(zoomOutLink);
+	  	WebElement zoomOutButton = zoomButtons.get(1);
 	  	zoomOutButton.click();
 	  	
 	  	try {
@@ -75,8 +82,7 @@ public class NavigatorHomePage {
 			e.printStackTrace();
 		}
 	  	
-	  	WebElement mapViewButton = driver.findElement(mapView);
-	  	mapViewButton.click();
+	  	mapView.click();
 	  	
 	  	try {
 			Thread.sleep(1000);
@@ -84,7 +90,7 @@ public class NavigatorHomePage {
 			e.printStackTrace();
 		}
 	  	
-	  	mapViewButton.click();
+	  	mapView.click();
 	  	
 	  	try {
 			Thread.sleep(1000);

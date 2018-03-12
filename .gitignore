@@ -26,3 +26,6 @@ target/*
 
 #test-output folder
 test-output/*
+
+.classpath
+.settings
